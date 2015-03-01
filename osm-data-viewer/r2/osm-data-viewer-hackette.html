@@ -1,7 +1,7 @@
 <!doctype html>
 <html lang=en >
 <head>
-<title>index-left-side-hackette</title>
+<title>vA3C OSM Data Viewer R2</title>
 <meta charset=utf-8 />
 <meta name=viewport content='width=device-width,user-scalable=no,minimum-scale=1.0,maximum-scale=1.0' />
 </head>
@@ -14,8 +14,6 @@
 	init();
 
 	function init() {
-
-		var txt = 'lorem ipsum, quia dolor sit, amet, consectetur, adipisci velit, sed quia non numquam eius modi tempora incidunt, ut labore et dolore magnam aliquam quaerat voluptatem. ut enim ad minima veniam, quis nostrum exercitationem ullam corporis suscipit laboriosam, nisi ut aliquid ex ea commodi consequatur? quis autem vel eum iure reprehenderit, qui in ea voluptate velit esse, quam nihil molestiae consequatur, vel illum, qui dolorem eum fugiat, quo voluptas nulla pariatur?';
 
 		var css = document.body.appendChild( document.createElement('style') );
 		css.innerHTML = 'body { font: 600 12pt monospace; margin: 0; overflow: hidden; }' +
@@ -35,11 +33,9 @@
 		menu.style.cssText = 'background-color: #eee; height: ' + ( 0.95 * window.innerHeight ) + 'px; left: -350px; opacity: 0.85; overflow: auto; ' +
 			'padding: 0 15px; position: absolute; top: 0px; width: 300px; ';
 
-		loadMarkdownInMenu( 'contents-left-side.md', menu );
+		loadMarkdownInMenu( 'osm-data-viewer.md', menu );
 
-		loadMarkdownInIframe( '#readme.md#' );
-
-//		loadHTMLInIframe( '#../template-threejs.html#' );
+		loadHTMLInIframe( '#osm-data-viewer.html#' );
 
 //		slideMenu();
 
@@ -105,13 +101,22 @@
 				items[ i ].id = 't' + i;
 
 				if ( items[ i ].innerHTML.indexOf( '(open)' ) === -1 ) {
+
 					items[ i ].className += ' close';
-					items[ i ].nextElementSibling.style.display = 'none';
+					item = items[ i ].nextElementSibling;
+
+					while ( item && item.tagName !== 'H2' ) {
+
+						item.style.display = 'none';
+						item = item.nextElementSibling;
+
+					} 
 
 				} else {
 
-					items[ i ].innerHTML = items[ i ].innerHTML.replace( '(open)','' );
 					items[ i ].className += ' open';
+					items[ i ].innerHTML = items[ i ].innerHTML.replace( '(open)','' );
+
 
 				}
 
@@ -119,22 +124,49 @@
 
 			}
 
+			// selFile.onchange = loadFile;
+
 		}
 
 	}
 
+	function loadFile() {
+console.log( 'click');
+		filesOSM = [
+			'ASHRAE90.1_HotelLarge_STD2010_San_Francisco.osm',
+			'ASHRAE90.1_HotelLarge_STD2013_San_Francisco.osm',
+			'Geometry.medium_office.osm',
+			'Geometry.secondary_school.osm',
+			'Geometry.small_hotel_doe.osm',
+			'Geometry.small_office.osm',
+			'Geometry.small_office_pre_1980.osm'
+		],
+		ifr.contentWindow.requestFile( '../../data/osm-files/' + filesOSM[ selFile.selectedIndex ], ifr.contentWindow.callback )
+	}
+
 	function toggle( element ) {
 
-		content = document.getElementById( element.id );
+		element = document.getElementById( element.id );
+		content = element.nextElementSibling;
 
-		if ( content.nextElementSibling.style.display === '' ) {
+		if ( content.style.display === '' ) {
 
-			content.nextElementSibling.style.display = 'none';
+			while ( content && content.tagName !== 'H2' ) {
+				content.style.display = 'none';
+				content = content.nextElementSibling;
+			}
+
 			element.className = 'toggle close';
 
 		} else {
 
-			content.nextElementSibling.style.display = '';
+			while ( content && content.tagName !== 'H2' ) {
+
+				content.style.display = '';
+				content = content.nextElementSibling;
+
+			}
+
 			element.className = 'toggle open';
 
 		}
@@ -153,7 +185,7 @@
 
 			"<script>" +
 
-			"	doc.style.cssText = 'font: bold 12pt monospace; margin: auto; max-width: 800px';" +
+			"	doc.style.cssText = 'font: bold 12pt monospace; margin-left: 80px; max-width: 900px';" +
 
 			"	var xmlHttp;" +
 
@@ -184,7 +216,7 @@
 
 		ifr.srcdoc = srcdoc;
 
-//		slideMenu(); // to hide
+		slideMenu(); // to hide
 
 //		location.hash = '';
 

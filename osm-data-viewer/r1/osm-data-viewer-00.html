@@ -37,7 +37,7 @@
 				'<button onclick=saveFile(); >Save File</button> &nbsp; ' +
 			'</p>' +
 			'<div>' +
-				'Opacity: <input type=range id=inpOpacity min=0.05 max=1.0 step=0.05 value=0.85 onchange=opac.innerHTML=this.value;findSurfaces(); /> <span id=opac >0.85</span> ' +
+				'Opacity: <input type=range id=inpOpacity min=0.05 max=1.0 step=0.05 value=0.85 onchange=opac.innerHTML=this.value;findSurfaces(); /> <span id=opac >1.00</span> ' +
 				'Camera near: <input type=range id=inpCameraNear min=1 max=100 step=1 value=1.0 /> <span id=near >1</span>' +
 			'</div>' +
 			'<div id=msg> &nbsp; </div>' +
@@ -46,30 +46,27 @@
 		'';
 		inpCameraNear.onchange = function() { near.innerHTML = camera.near=parseFloat(this.value);camera.updateProjectionMatrix() };
 
-
-
 // Heads Up
 		headsUp = document.body.appendChild( document.createElement( 'div' ) );
 		headsUp.style.cssText = 'background-color: #ddd; border-radius: 8px; padding: 0 5px 10px 5px; opacity: 0.85; ' +
-			'position: absolute; left: 50px; text-align: left; z-index: 10;';
+			'position: absolute; left: 50px; text-align: left; ';
 
 // Data Display
-		txtArea1.style.cssText = 'height: 300px; width: ' +  0.4 * window.innerWidth + 'px; ';
+		txtArea1.style.cssText = 'height: 300px; width: ' +  0.48 * window.innerWidth + 'px; ';
 		txtArea1.placeholder = 'text of file you open will appear here..';
 
-		txtArea2.style.cssText = 'height: ' + (window.innerHeight - 470) + 'px; margin-left: 0px; width: ' +  0.4 * window.innerWidth + 'px; ';
+		txtArea2.style.cssText = 'height: ' + (window.innerHeight - 470) + 'px; margin-left: 0px; width: ' +  0.48 * window.innerWidth + 'px; ';
 		txtArea2.placeholder = 'text of file you open will appear here..';
 
 		renderer = new THREE.WebGLRenderer( { alpha: 1, antialias: true, clearColor: 0xffffff }  );
-//		renderer.setSize( 0.48 * window.innerWidth, window.innerHeight - 40 );
-		renderer.setSize( window.innerWidth, window.innerHeight );
+		renderer.setSize( 0.48 * window.innerWidth, window.innerHeight - 40 );
 		renderer.shadowMapEnabled = true;
 		renderer.shadowMapSoft = true;
 		document.body.appendChild( renderer.domElement );
 
 		renderer.domElement.style.cssText = 'border: 1px solid black; position: absolute; right: 10px; top: 20px; ';
 
-		camera = new THREE.PerspectiveCamera( 40, window.innerWidth / window.innerHeight, 1, 1000 );
+		camera = new THREE.PerspectiveCamera( 40, 0.48 * window.innerWidth / (window.innerHeight - 40), 1, 1000 );
 		camera.position.set( 50, 50, 50 );
 
 		controls = new THREE.OrbitControls( camera, renderer.domElement );
@@ -296,14 +293,15 @@
 				mesh.userData.sunExposure = sunExposure;
 				mesh.userData.windExposure = windExposure;
 				mesh.userData.vertices = vertices;
-				surfaces.push( mesh );
-				project.add( mesh );
+
+
 
 			}
 
 		}
 
 		txtArea2.innerHTML = txt;
+//		project.rotation.x = -0.5 *  Math.PI;
 
 	}
 /*
@@ -352,25 +350,28 @@ console.log( vertex );
 
 		mesh.castShadow = true;
 		mesh.receiveShadow = true;
-
+		surfaces.push( mesh );
 		edges = new THREE.EdgesHelper( mesh, 0x000000 );
 		mesh.add( edges );
-
+		project.add( mesh );
 
 		return mesh;
 	}
 
 	function onDocumentMouseClick( event ) {
 
-		event.preventDefault();
+console.log( event );
+//		event.preventDefault();
 
 		mouse.x = ( event.clientX / renderer.domElement.width ) * 2 - 1;
 		mouse.y = - ( event.clientY / renderer.domElement.height ) * 2 + 1;
 
 		raycaster.setFromCamera( mouse, camera );
 		intersects = raycaster.intersectObjects( surfaces );
-
+console.log( intersects, mouse.x, mouse.y  );
 		if ( intersects.length > 0 ) {
+
+
 
 			if ( intersected != intersects[ 0 ].object ) {
 
@@ -387,14 +388,7 @@ console.log( vertex );
 				headsUp.style.top = -10 + 0.5 * window.innerHeight - mouse.y * 0.5 * window.innerHeight + 'px';
 				headsUp.style.display = '';
 
-				var txt = '<h3 style="margin:0;" >OSM Data Viewer / Three.js id:' + intersected.id + '</h3>' +
-					'<p>Handle: ' + intersected.userData.handle + '</p>' +
-					'<p>Name: ' + intersected.userData.name + '</p>' +
-					'<p>Surface Type: ' + intersected.userData.surfaceType+ '</p>' +
-					'<p>Space Name: ' + intersected.userData.spaceName + '</p>' +
-					'<p>Outside Boundary Condition: ' + intersected.userData.outsideBoundaryCondition + '</p>' +
-					'<p>Sun Exposure: ' + intersected.userData.sunExposure + '</p>' +
-					'<p>windExposure: ' + intersected.userData.windExposure + '</p>' +
+				var txt = '<h1 style="margin:0;" >cube id:' + intersected.id + '</h1>' +
 				'';
 				headsUp.innerHTML = txt;
 
@@ -412,8 +406,6 @@ console.log( vertex );
 			}
 
 			intersected = null;
-
-			headsUp.style.display = 'none';
 
 			document.body.style.cursor = 'auto';
 

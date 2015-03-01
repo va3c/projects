@@ -1,0 +1,271 @@
+<!doctype html>
+<html lang=en>
+<head>
+<title>vA3C OSM Data Parser</title>
+<meta charset=utf-8>
+<meta name=viewport content='width=device-width,user-scalable=no,minimum-scale=1.0,maximum-scale=1.0' />
+</head>
+<body>
+<script src=http://mrdoob.github.io/three.js/build/three.min.js ></script>
+<script src=http://mrdoob.github.io/three.js/examples/js/controls/OrbitControls.js ></script>
+<script src=http://mrdoob.github.io/three.js/examples/js/libs/stats.min.js ></script>
+<script>
+
+	var vertices;
+	var xmlHttp;
+	var fileName = '../../data/osm-files/Geometry.small_office.osm';
+	var project;
+
+var lines
+
+	init();
+//	animate();
+
+	function init() {
+
+		var css = document.head.appendChild( document.createElement('style') );
+		css.innerHTML ='body { font: 600 12pt monospace; overflow: auto; }' +
+		'';
+
+		var info = document.body.appendChild( document.createElement( 'div' ) );
+		info.innerHTML = '<a href="" ><h1>' + document.title + '</a></h1>' +
+			'<p>' +
+				'<input type=file id=inpFile onchange=readFile(); /> ' +
+				'<button onclick=saveFile(); >Save File</button> &nbsp; ' +
+				'<button onclick=findSurfaces(); >Find Surfaces</button>' +
+			'</p>' +
+			'<p id=msg> &nbsp; </p>' +
+			'<textarea id=txtArea1 ></textarea>' +
+			'<textarea id=txtArea2 ></textarea>' +
+		'';
+
+		txtArea1.style.cssText = 'height: ' + (window.innerHeight - 170) + 'px; width: ' +  0.45 * window.innerWidth + 'px; ';
+//		txtArea1.style.cssText = 'height: 300px; width: ' +  0.48 * window.innerWidth + 'px; ';
+		txtArea1.placeholder = 'text of file you open will appear here..';
+
+		txtArea2.style.cssText = 'height: ' + (window.innerHeight - 170) + 'px; margin-left: 10px; width: ' +  0.45 * window.innerWidth + 'px; ';
+		txtArea2.placeholder = 'text of file you open will appear here..';
+
+/*
+		renderer = new THREE.WebGLRenderer( { alpha: 1, antialias: true, clearColor: 0xffffff }  );
+		renderer.setSize( 0.48 * window.innerWidth, window.innerHeight - 40 );
+		document.body.appendChild( renderer.domElement );
+
+		renderer.domElement.style.cssText = 'border: 1px solid black; position: absolute; right: 10px; top: 20px; ';
+
+		camera = new THREE.PerspectiveCamera( 40, 0.48 * window.innerWidth / (window.innerHeight - 40), 1, 1000 );
+		camera.position.set( 100, 100, 100 );
+
+		controls = new THREE.OrbitControls( camera, renderer.domElement );
+
+		scene = new THREE.Scene();
+
+// ground box
+		geometry = new THREE.BoxGeometry( 100, 2, 100 );
+		material = new THREE.MeshNormalMaterial();
+		mesh = new THREE.Mesh( geometry, material );
+		mesh.position.set( 0, -10, 0 );
+		scene.add( mesh );
+
+		mesh = new THREE.GridHelper( 50, 10 );
+		mesh.position.set( 0, -9, 0 );
+		scene.add( mesh );
+
+// axes
+		var axisHelper = new THREE.AxisHelper( 50 );
+		scene.add( axisHelper );
+
+		project = new THREE.Object3D();
+		scene.add( project );
+*/
+		requestFile( fileName, callback );
+
+	}
+
+	function requestFile( fileName, callback ) {
+
+		xmlHttp = new XMLHttpRequest();
+		xmlHttp.open( 'GET', fileName, true );
+		xmlHttp.onreadystatechange = callback;
+		xmlHttp.send( null );
+
+	}
+
+	function callback() {
+
+		if ( xmlHttp.readyState != 4  ) { return; }
+		txtArea1.innerHTML = xmlHttp.responseText;
+
+		msg.innerHTML = 'name: ' + fileName + ' size: ' + xmlHttp.responseText.length + 
+		'';
+
+		findSurfaces();
+
+	}
+
+	function readFile() {
+
+			var reader = new FileReader();
+
+			reader.onload = function ( event ) {
+
+				var output = reader.result;
+				txtArea1.innerHTML = output;
+
+				msg.innerHTML = 'name: ' + inpFile.files[0].name + ' size: ' + inpFile.files[0].size + 
+//				' type: ' + inpFile.files[0].type +
+				' modified: ' + inpFile.files[0].lastModifiedDate;
+
+			};
+
+			reader.readAsText( inpFile.files[ 0 ] );
+
+	}
+
+	function saveFile() {
+
+		var blob = new Blob( [ txtArea.innerHTML ] );
+		var a = document.body.appendChild( document.createElement("a") );
+		a.href = window.URL.createObjectURL( blob );
+		a.download = "hello-world.txt";
+		a.click();
+		delete a;
+
+	}
+
+	function findSurfaces() {
+		surfaces = [];
+		txt = txtArea1.innerHTML;
+		lines = txt.split( '\n' );
+
+		while ( lines.length > 0 ) {
+
+			line = lines.shift();
+
+			if ( line.indexOf( 'OS:Surface,' ) > -1 ) {
+
+				surfaces.push( line + '\n' );
+				vertices = []
+				line = lines.shift();
+
+				while ( line.indexOf( 'OS:' ) < 0 ) {
+					item = line.split( ',' )[0].trim();
+					if ( line.indexOf( 'Handle' ) > -1 ) { 
+						handle = item;
+console.log( handle );
+					}
+					if ( line.indexOf( '- Name' ) > -1 ) { 
+						name = item
+console.log( name );
+					}
+					if ( line.indexOf( 'Surface Type' ) > -1 ) { 
+						surfaceType = item
+console.log( surfaceType );
+					}
+					if ( line.indexOf( 'Space Name' ) > -1 ) { 
+						spaceName = item
+console.log( spaceName );
+					}
+					if ( line.indexOf( 'Outside Boundary Condition' ) > -1 ) { 
+						outsideBoundaryCondition = item
+console.log( 'obc', outsideBoundaryCondition );
+					}
+					if ( line.indexOf( 'Sun Exposure' ) > -1 ) { 
+						sunExposure = item;
+console.log( sunExposure );
+					}
+					if ( line.indexOf( 'Wind Exposure' ) > -1 ) { 
+						windExposure = item;
+console.log( windExposure );
+					}
+					if ( line.indexOf( 'X,Y,Z Vertex' ) > -1 ) { 
+						verts = line.split( ',' );
+						vertices.push ( [ parseFloat( verts[ 0 ] ), parseFloat( verts[ 1 ] ), parseFloat( verts[ 2 ] ) ] ); 
+console.log( vertices );
+					}
+
+					surfaces.push( line + '\n' );
+					line = lines.shift();
+
+				}
+
+			}
+
+		}
+
+
+		txtArea2.innerHTML = surfaces;
+
+	}
+
+	function findSurfacesxxx() {
+// http://www.webdeveloper.com/forum/showthread.php?261923-how-to-use-javascript-in-html-to-read-txt-file-and-display-it
+
+		txt = txtArea1.innerHTML;
+		vertices = txt.split("\n").filter( /./.test, /Vertex/)
+		output = vertices.join("\n");
+		txtArea2.innerHTML = output;
+
+		scene.remove( project );
+		project = new THREE.Object3D();
+		project.rotation.x = -0.5 *  Math.PI;
+		scene.add( project );
+
+		parseVertices();
+
+	}
+
+	function parseVertices() {
+
+		if ( vertices.length > 2 ) {
+
+			var faceVertices = [];
+			for ( var i = 0; i < 4; i++ ) {
+				vertex = vertices.shift();
+				vertex = vertex.split(',');
+				faceVertices.push( v3( parseFloat( vertex[0]), parseFloat( vertex[1]), parseFloat( vertex[2])  ) );
+console.log( vertex );
+			}
+			quad( faceVertices );
+			parseVertices();
+
+		}
+//console.log( vertices );
+	}
+
+	function quad( arr ) {
+
+		var faces = [
+			f3( 0, 1, 2 ),
+			f3( 0, 2, 3 ),
+		];
+
+		var geometry = new THREE.Geometry();
+		geometry.vertices = arr;
+		geometry.faces = faces;
+
+		geometry.computeFaceNormals();
+		geometry.mergeVertices();
+		var material = new THREE.MeshBasicMaterial( { color: 0xccccccc, side: 2 } );
+		var mesh = new THREE.Mesh( geometry, material );
+
+		mesh.castShadow = true;
+		mesh.receiveShadow = true;
+		project.add( mesh );
+
+	}
+
+	function v3( x, y, z ){ return new THREE.Vector3( x, y, z ); }
+	function f3( x, y, z ){ return new THREE.Face3( x, y, z ); }
+
+	function animate() {
+
+		requestAnimationFrame( animate );
+		controls.update();
+//		stats.update();
+		renderer.render( scene, camera );
+
+	}
+</script>
+</body>
+</html>
