@@ -12,7 +12,7 @@ Read and display in 3D the data contained in Open Studio OSM files
 ### Vision
 Make the data contained in OSM files available to a larger audience in a greater variety of ways
 
-	* Including on tablets and phones
+* Including on tablets and phones
 
 ## Current Status
 
