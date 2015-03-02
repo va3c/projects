@@ -189,9 +189,7 @@
 			reader.onload = function ( event ) {
 
 				var output = reader.result;
-//				txtArea1.innerHTML = output;
 				textOSM = output;
-
 
 //				msg.innerHTML = 'name: ' + inpFile.files[0].name + ' size: ' + inpFile.files[0].size + 
 //				' type: ' + inpFile.files[0].type +
@@ -215,26 +213,6 @@
 		delete a;
 
 	}
-
-/*
-	function findSurfaces() {
-// http://www.webdeveloper.com/forum/showthread.php?261923-how-to-use-javascript-in-html-to-read-txt-file-and-display-it
-
-		txt = txtArea1.innerHTML;
-		vertices = txt.split("\n").filter( /./.test, /Vertex/)
-		output = vertices.join("\n");
-		txtArea2.innerHTML = output;
-
-		scene.remove( project );
-		project = new THREE.Object3D();
-//		project.rotation.x = -0.5 *  Math.PI;
-		scene.add( project );
-
-		parseVertices();
-
-	}
-*/
-
 
 	function findSurfaces() {
 
@@ -328,9 +306,8 @@
 
 		}
 
-//		txtArea2.innerHTML = txt;
-
 	}
+
 /*
 	function parseVertices() {
 
@@ -469,6 +446,7 @@ console.log( vertex );
 		renderer.render( scene, camera );
 
 	}
+
 </script>
 </body>
 </html>
