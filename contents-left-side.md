@@ -2,9 +2,6 @@
 [vA3C Projects]( index.html )
 ===
 
-[vA3C Pojects web page]( http://va3c.github.io/projects/  )   
-[vA3C Projects source code]( https://github.com/va3c/projects )
-
 ## vA3C OSM Data Viewer (open)
 
 [[O]]( http://va3c.github.io/projects/osm-data-viewer/latest/ ) 
