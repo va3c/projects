@@ -1,7 +1,7 @@
 [vA3C Projects]( ../../index.html ) &raquo;
 [vA3C<br>OSM Data Viewer]( osm-data-viewer-hackette.html "Hi, Dan!" )
 ===
-
+<span id=msg1 ></span>
 ## Options (open)
 
 Sample files:
@@ -9,7 +9,7 @@ Sample files:
 	<option>Hotel Large STD2010 San Francisco</option>
 	<option>Hotel Large STD2013 San Francisco</option>
 	<option>medium office</option>
-	<option>secondary school/option>
+	<option>secondary school</option>
 	<option>small hotel doe</option>
 	<option selected>small office</option>
 	<option>small office pre 1980</option>

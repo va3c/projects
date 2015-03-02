@@ -163,23 +163,20 @@
 	function callback() {
 
 		if ( xmlHttp.readyState != 4  ) { return; }
-//		txtArea1.innerHTML = xmlHttp.responseText;
 
 		textOSM = xmlHttp.responseText;
-
-
-//		msg.innerHTML = 'name: ' + fileName + ' size: ' + xmlHttp.responseText.length + 
-//		'';
 
 		if ( window.self === window.top ) {
 //			document.write('<h1>Not in an iframe</h1>');
 		} else {
 //			document.write('<h1>Inside an iframe</h1>');
 
+			parent.msg1.innerHTML = 'name: ' + parent.selFile.value + '<br>size: ' + xmlHttp.responseText.length + 
+			'';
+
 			parent.txtArea1.innerHTML = textOSM.replace( '!-', '\n!-' );
 
 		}
-
 
 		findSurfaces();
 
