@@ -176,7 +176,7 @@
 		} else {
 //			document.write('<h1>Inside an iframe</h1>');
 
-			parent.txtArea1.innerHTML = textOSM;
+			parent.txtArea1.innerHTML = textOSM.replace( '!-', '\n!-' );
 
 		}
 
@@ -204,7 +204,7 @@
 
 			};
 
-			reader.readAsText( inpFile.files[ 0 ] );
+			reader.readAsText( parent.inpFile.files[ 0 ] );
 
 	}
 
@@ -374,8 +374,19 @@ console.log( vertex );
 
 		geometry.computeFaceNormals();
 		geometry.mergeVertices();
-var inpOpacity;
-		opacity = inpOpacity ? parseFloat( inpOpacity.value ) : 0.85;
+
+		var opacity;
+
+		if ( window.self === window.top ) {
+
+			opacity = 0.85;
+
+		} else {
+
+			opacity = parseFloat( parent.inpOpacity.value );
+
+		}
+
 		var material = new THREE.MeshPhongMaterial( { ambient: color, color: color, opacity: opacity, side: 2, transparent: true } );
 		var mesh = new THREE.Mesh( geometry, material );
 
@@ -391,7 +402,7 @@ var inpOpacity;
 
 	function onDocumentMouseClick( event ) {
 
-		event.preventDefault();
+//		event.preventDefault();
 
 		mouse.x = ( event.clientX / renderer.domElement.width ) * 2 - 1;
 		mouse.y = - ( event.clientY / renderer.domElement.height ) * 2 + 1;
@@ -417,13 +428,13 @@ var inpOpacity;
 				headsUp.style.display = '';
 
 				var txt = '<h3 style="margin:0;" >OSM Data Viewer / Three.js id:' + intersected.id + '</h3>' +
-					'<p>Handle: ' + intersected.userData.handle + '</p>' +
-					'<p>Name: ' + intersected.userData.name + '</p>' +
-					'<p>Surface Type: ' + intersected.userData.surfaceType+ '</p>' +
-					'<p>Space Name: ' + intersected.userData.spaceName + '</p>' +
-					'<p>Outside Boundary Condition: ' + intersected.userData.outsideBoundaryCondition + '</p>' +
-					'<p>Sun Exposure: ' + intersected.userData.sunExposure + '</p>' +
-					'<p>windExposure: ' + intersected.userData.windExposure + '</p>' +
+					'Handle: <small>' + intersected.userData.handle + '</small><br>' +
+					'Name: ' + intersected.userData.name + '<br>' +
+					'Surface Type: ' + intersected.userData.surfaceType+ '<br>' +
+					'Space Name: <small>' + intersected.userData.spaceName + '</small><br>' +
+					'Outside Boundary Condition: ' + intersected.userData.outsideBoundaryCondition + '<br>' +
+					'Sun Exposure: ' + intersected.userData.sunExposure + '<br>' +
+					'Wind Exposure: ' + intersected.userData.windExposure + '<br>' +
 				'';
 				headsUp.innerHTML = txt;
 
