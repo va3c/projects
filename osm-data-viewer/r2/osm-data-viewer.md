@@ -28,16 +28,24 @@ Camera near: <input type=range id=inpCameraNear min=1 max=100 step=1 value=1.0 o
 The text area below contains the full contents of the selected OSM file.
 <textarea id=txtArea1 style=font-size:9pt;height:200px;width:100%; ></textarea>
 
-## Three.js Interpretated Data
+## Three.js Interpreted Data
 The text area below contains the parameters that have been read from the OSM file and used to create the model as shown here.
 <textarea id=txtArea2 style=font-size:9pt;height:200px;width:100%; ></textarea>
 
 ## About
+OpenStudio is a cross-platform collection of software tools to support whole building energy modeling using EnergyPlus and advanced daylight analysis using Radiance. 
+<https://www.openstudio.net/>
 
-Thank you Dan Macumber of NREL for bringing the awesomeness of OSM to light
+This vA3C script reads [Open Studio]( https://github.com/NREL/OpenStudio ) [OSM files]( https://github.com/NREL/OpenStudio-Prototype-Buildings/ ) and displays their contents in 3D.
+
+Thank you [Dan Macumber]( http://www.nrel.gov/buildings/commercial_staff.html#macumber ) of [NREL]( http://www.nrel.gov/ ) for bringing the awesomeness of OSM to light.
+
+[Source Code on GitHub]( https://github.com/va3c/projects/tree/gh-pages/osm-data-viewer )  
+[Read Me]( #../readme.md# )
 
 ### Copyright and License
-copyright &copy; 2015 vA3C authors ~ All work herein is under the [MIT License]()
+Copyright &copy; 2015 vA3C authors  
+All work herein is under the [MIT License]( http://opensource.org/licenses/MIT )
 
 
 
