@@ -55,8 +55,19 @@ The idea, or the hope anyway, is to write code that's easy to read - code that y
 * Add first person camera
 * Add exploded view 
 * Add terrain viewer
+* Add real-time updates: changes to OSM can be viewed in real-time
 
 ### Change Log
+
+2015-03-02 ~ Theo
+
+* Opacity and camera cut-off update while you move slider ( onmousemove instead of onchange ). This can cause issues. Please monitor.
+* Adds save model to JSON 4 capability. 
+	* Note: Open File button currently only reads OSM files. Open JSON files TBD!
+	* In meantime, see [vA3C Cookbook]( https://github.com/va3c/viewer/tree/gh-pages/cookbook ) or [Three.js Editor]( http://mrdoob.github.io/three.js/editor/ ) < remember to add lights
+* Partial fix to Outside Boundary Condition
+* Add read OS Site parameters
+* Started adding sub surfaces
 
 2015-03-01 ~ Theo
 
