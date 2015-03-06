@@ -14,7 +14,7 @@ Sample files:
 	<option selected>small office</option>
 	<option>small office pre 1980</option>
 </select>
-
+r
 Open an OSM file on you computer:
 <input type=file id=inpFile onchange=ifr.contentWindow.readFile(); /> 
 
@@ -22,6 +22,7 @@ Open an OSM file on you computer:
 
 Opacity:<input type=range id=inpOpacity min=0.05 max=1.0 step=0.05 value=0.85 onmousemove=updateOpacity(); /><small id=opac >0.85</small>  
 Camera near:<input type=range id=inpCameraNear min=1 max=100 step=1 value=1.0 onmousemove=updateCameraCutOff(); /><small id=near >1</small>
+
 
 
 ## OSM Source

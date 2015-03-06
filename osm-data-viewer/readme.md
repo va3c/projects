@@ -45,6 +45,7 @@ The idea, or the hope anyway, is to write code that's easy to read - code that y
 
 ## Issues /Bugs
 
+* Subsurface edges helpers not coplanar with subsurface
 * Code currently has many items commented out / needs a clean-up
 * Setting/'hamburger' button do not initiate menu slide on Android 
 * Selected surfaces do not de-highlight properly
@@ -58,6 +59,17 @@ The idea, or the hope anyway, is to write code that's easy to read - code that y
 * Add real-time updates: changes to OSM can be viewed in real-time
 
 ### Change Log
+
+2015-03-05 ~ Theo
+
+* Add version and space parameters
+* Add the beginning of a translate on axis feature so that subsurfaces sit just a bit proud of the underlying surface
+	* Face normals helpers were added
+	* Helpers show that normals seem to consistently face the outside of the model
+
+* Views are beginning to look quite bizarre with all the helpers
+* Will clean up eventually, but makes things fun to look at for now
+
 
 2015-03-02 ~ Theo
 

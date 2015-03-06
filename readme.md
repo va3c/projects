@@ -11,7 +11,7 @@ aVA3C Project is an effort where there is an objective in helping particular typ
  
 ## Projects
 
-The first vA3C project is a collaboration with the team working on [Open Studio]( https://www.openstudio.net/ )
+The first vA3C Project is a effort to read and display [Open Studio]( https://www.openstudio.net/ ) data:
 
 > OpenStudio is a cross-platform (Windows, Mac, and Linux) collection of software tools to support whole building energy modeling using EnergyPlus and advanced daylight analysis using Radiance.  OpenStudio is an open source project to facilitate community development, extension, and private sector adoption. OpenStudio includes graphical interfaces along with a Software Development Kit (SDK). 
 
