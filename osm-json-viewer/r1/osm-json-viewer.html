@@ -1,0 +1,299 @@
+<!doctype html>
+<html lang=en >
+<head>
+<title>osm-json-viewer</title>
+<meta charset=utf-8 />
+<meta name=viewport content='width=device-width,user-scalable=no,minimum-scale=1.0,maximum-scale=1.0' />
+</head>
+<body>
+<script src=http://mrdoob.github.io/three.js/build/three.min.js ></script>
+<script src=http://mrdoob.github.io/three.js/examples/js/controls/OrbitControls.js ></script>
+<script src=http://mrdoob.github.io/three.js/examples/js/libs/stats.min.js ></script>
+<script>
+	var info, renderer, scene, camera, controls, stats, light;
+	var geometry, material, mesh, helper;
+
+	var project;
+
+	var raycaster;
+	var mouse;
+	var intersected;
+
+	init();
+	animate();
+
+	function init() {
+
+		var css = document.head.appendChild( document.createElement('style') );
+		css.innerHTML ='body { font: 600 12pt monospace; margin: 0; overflow: hidden; }' +
+		'';
+
+		info = document.body.appendChild( document.createElement( 'div' ) );
+		info.style.cssText = 'left: 20px; position: absolute; top: 0px; width: 100% ';
+		info.innerHTML = '<a href="" ><h1>' + document.title + '</h1></a>' +
+			'<input type=file id=inpFile onchange=readFile(); /> ' +
+			'<div id=msg></div>' +
+		'';
+
+// Heads Up
+		headsUp = document.body.appendChild( document.createElement( 'div' ) );
+		headsUp.style.cssText = 'background-color: #ddd; border-radius: 8px; padding: 0 5px 10px 5px; opacity: 0.85; ' +
+			'position: absolute; left: 50px; text-align: left; z-index: 10;';
+
+		stats = new Stats();
+		stats.domElement.style.cssText = 'position: absolute; right: 0; top: 0; z-index: 100; ';
+		document.body.appendChild( stats.domElement );
+
+		renderer = new THREE.WebGLRenderer( { alpha: 1, antialias: true, clearColor: 0xffffff }  );
+		renderer.setSize( window.innerWidth, window.innerHeight );
+		renderer.shadowMapEnabled = true;
+		renderer.shadowMapSoft = true;
+		document.body.appendChild( renderer.domElement );
+
+		scene = new THREE.Scene();
+
+		camera = new THREE.PerspectiveCamera( 40, window.innerWidth / window.innerHeight, 1, 5000 );
+		camera.position.set( 100, 100, 100 );
+		scene.add( camera ); // for light to follow
+
+// controls
+		controls = new THREE.OrbitControls( camera, renderer.domElement );
+		controls.minDistance = 10;
+		controls.maxDistance = 1000;
+
+// Lights
+		light = new THREE.AmbientLight( 0x888888 );
+		scene.add( light );
+
+		light = new THREE.DirectionalLight( 0xffffff, 0.5 );
+		light.position.set( -200, 200, 200 );
+
+		var d = 100;
+		light.shadowCameraLeft = -d;
+		light.shadowCameraRight = d;
+		light.shadowCameraTop = d;
+		light.shadowCameraBottom = -d;
+
+		light.shadowCameraNear = 200;
+		light.shadowCameraFar = 500;
+
+// can help stop appearance of gridlines in objects with opacity < 1
+		light.shadowBias = -0.0002; // default 0 ~ distance fron corners?
+		light.shadowDarkness = 0.3; // default 0.5
+		light.shadowMapWidth = 2048;  // default 512
+		light.shadowMapHeight = 2048;
+
+		light.castShadow = true;
+		light.shadowCameraVisible = true;
+		scene.add( light );
+
+		light = new THREE.PointLight( 0xffffff, 0.5 );
+		light.position = camera.position;
+		camera.add( light );
+/*
+// Ground Plane
+		geometry = new THREE.BoxGeometry( 100, 5, 100 );
+
+//		var material.color = 0x202099; 
+//		var material = new THREE.MeshNormalMaterial();
+		var material = new THREE.MeshPhongMaterial( {
+			color: 0xffffff * Math.random(), 
+			ambient: 0xffffff * Math.random(),
+			specular: 0xffffff * Math.random(),
+			shininess: 50,
+			side: THREE.DoubleSide
+		} );
+
+		mesh = new THREE.Mesh( geometry, material );
+		mesh.position.set( 0, -10, 0 );
+		mesh.castShadow = true;
+		mesh.receiveShadow = true;
+		scene.add( mesh );
+
+		helper = new THREE.BoxHelper( mesh );
+		helper.material.color.setRGB( 1, 0, 1 );
+		scene.add( helper );
+
+		var helper = new THREE.GridHelper( 50, 10 );
+		helper.position.set( 0, -7.5, 0 );
+		scene.add( helper );
+*/
+
+		var axisHelper = new THREE.AxisHelper( 50 );
+		scene.add( axisHelper );
+
+
+		loadFile( '../../data/osm-json-files/secondary-school.json' ); 
+
+		raycaster = new THREE.Raycaster();
+		mouse = new THREE.Vector2();
+
+		document.addEventListener( 'click', onDocumentMouseClick, false );
+
+	}
+
+
+	function loadFile( fileName ) {
+
+
+
+		loader = new THREE.ObjectLoader();
+
+        loader.load( fileName, function( result ){
+
+			if ( result ) {
+
+				scene.remove( project );
+				project = new THREE.Object3D();
+
+				scene.add( project );
+
+				project.add( result );
+			} else {
+				console.log( 'oooops' );
+			}
+
+//			zoomExtents();
+
+			msg.innerHTML = '<h3>' + fileName.split('/').pop() + '</h3>';
+
+// add loader.showStatus...
+
+		}, onLoad, onError );
+
+		function onLoad(event) {
+//console.log( 'yay' ); 
+		}
+
+		function onError(event) {
+console.log( 'oops' );
+		}
+
+	}
+
+	function readFile() {
+
+//		var file = fileObject.files[ 0 ];
+
+		scene.remove( project );
+		project = new THREE.Object3D();
+
+		scene.add( project );
+
+		var file = parent.inpFile.files[ 0 ]
+
+		var reader = new FileReader();
+
+		reader.onload = function ( event ) {
+
+			data = reader.result;
+
+			msg.innerHTML = 'name: ' + file.name + ' size: ' + file.size + 
+				' type: ' + file.type + ' modified: ' + file.lastModifiedDate +
+			'';
+
+//console.log( data );
+
+			data = JSON.parse( data );
+
+// Three.js JSON 4+ only
+
+			var loader = new THREE.ObjectLoader();
+
+			data = loader.parse( data );
+
+			project.add( data );
+
+		};
+
+		if ( reader.readAsBinaryString !== undefined ) {
+
+			reader.readAsBinaryString( file );
+
+		} else {
+
+			reader.readAsArrayBuffer( file );
+
+		}
+
+
+	}
+
+	function onDocumentMouseClick( event ) {
+
+//		event.preventDefault();
+
+		mouse.x = ( event.clientX / renderer.domElement.width ) * 2 - 1;
+		mouse.y = - ( event.clientY / renderer.domElement.height ) * 2 + 1;
+
+		raycaster.setFromCamera( mouse, camera );
+		intersects = raycaster.intersectObjects( scene.chidren );
+
+		if ( intersects.length > 0 ) {
+
+			if ( intersected != intersects[ 0 ].object ) {
+
+				if ( intersected && intersected.material.emissive ) {
+
+					intersected.currentHex = intersected.material.emissive.getHex();
+
+				}
+
+				intersected = intersects[ 0 ].object;
+
+				if ( intersected && intersected.material.emissive ) {
+
+					intersected.material.emissive.setHex( 0xff0000 );
+
+				}
+
+				headsUp.style.left = 10 + 0.5 * window.innerWidth + mouse.x * 0.5 * window.innerWidth + 'px';
+				headsUp.style.top = -10 + 0.5 * window.innerHeight - mouse.y * 0.5 * window.innerHeight + 'px';
+				headsUp.style.display = '';
+
+				var txt = '<h3 style="margin:0;" >OSM Data Viewer / Three.js id:' + intersected.id + '</h3>' +
+					'Handle: <small>' + intersected.userData.handle + '</small><br>' +
+					'Name: ' + intersected.userData.name + '<br>' +
+					'Surface Type: ' + intersected.userData.surfaceType+ '<br>' +
+					'Space Name: <small>' + intersected.userData.spaceName + '</small><br>' +
+					'Outside Boundary Condition: ' + intersected.userData.outsideBoundaryCondition + '<br>' +
+					'Sun Exposure: ' + intersected.userData.sunExposure + '<br>' +
+					'Wind Exposure: ' + intersected.userData.windExposure + '<br>' +
+				'';
+				headsUp.innerHTML = txt;
+
+			}
+
+			document.body.style.cursor = 'pointer';
+
+
+		} else {
+
+			if ( intersected && intersected.material.emissive ) {
+
+				intersected.material.emissive.setHex( intersected.currentHex );
+
+			}
+
+			intersected = null;
+
+			headsUp.style.display = 'none';
+
+			document.body.style.cursor = 'auto';
+
+		}
+
+	}
+
+	function animate( timestamp ) {
+
+		requestAnimationFrame( animate );
+		controls.update();
+		stats.update();
+		renderer.render( scene, camera );
+
+	}
+
+</script>
+</body>
+</html>

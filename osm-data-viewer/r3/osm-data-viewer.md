@@ -15,7 +15,7 @@ Sample files:
 	<option>small office pre 1980</option>
 </select>
 
-Open a file on you computer:
+Open an OSM file on you computer:
 <input type=file id=inpFile onchange=ifr.contentWindow.readFile(); /> 
 
 <button onclick=ifr.contentWindow.saveFile(); >Save Model to JSON File</button>
