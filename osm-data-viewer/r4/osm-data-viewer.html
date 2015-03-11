@@ -350,7 +350,7 @@
 
 				if ( surfaceType === 'RoofCeiling' ) { color = 0xcc0000; }
 				if ( surfaceType === 'Floor' ) { color = 0x0000cc; }
-				mesh = quad( vertices, color );
+				mesh = quad( vertices, color, name );
 
 				mesh.userData.handle = handle;
 				mesh.userData.name = name;
@@ -397,7 +397,7 @@
 
 				color = 0x444444;
 
-				mesh = quad( vertices, color );
+				mesh = quad( vertices, color, name );
 
 				mesh.userData.handle = handle;
 				mesh.userData.name = name;
@@ -445,7 +445,7 @@ console.log( vertex );
 	}
 */
 
-	function quad( arr, color ) {
+	function quad( arr, color, name ) {
 
 		if ( arr.length < 4 ) {
 			var faces = [
@@ -484,9 +484,10 @@ console.log( vertex );
 
 		mesh.castShadow = true;
 		mesh.receiveShadow = true;
+		mesh.name = name;
 
 		edges = new THREE.EdgesHelper( mesh, 0x000000 );
-		mesh.add( edges );
+		scene.add( edges );
 
 		face = new THREE.FaceNormalsHelper( mesh, -5, 0xff00ff );
 

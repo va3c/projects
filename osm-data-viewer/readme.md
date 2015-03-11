@@ -60,6 +60,12 @@ The idea, or the hope anyway, is to write code that's easy to read - code that y
 
 ### Change Log
 
+2015-03-10 ~ Theo
+
+* Helpers to sub-surfaces now line up with parent sub-surface
+* Still have not figured out what happens to the attic roof!
+
+
 2015-03-05 ~ Theo
 
 * Add version and space parameters
