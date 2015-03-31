@@ -23,7 +23,7 @@
 ## vA3C OSM Data Replay (open)
 
 [[O]]( http://va3c.github.io/projects/osm-data-replay/latest/ ) 
-[OSM Data Replay latest]( #http://va3c.github.io/projects/osm-data-replay/latest/# )  
+[OSM Data Replay latest]( #http://va3c.github.io/projects/osm-data-replay/latest/index.html# )  
 [OSM Data Replay source code]( https://github.com/va3c/projects/tree/gh-pages/osm-data-replay )  
 [OSM Data Replay Read Me]( #./osm-data-replay/readme.md# ) 
 

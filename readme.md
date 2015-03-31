@@ -27,7 +27,7 @@ Read and display in 3D the data contained in Open Studio OSM files
 
 ## vA3C Data Replay for Open Studio
 
-<a href=http://va3c.github.io/projects/open-studio-data-display/latest/ target=_top >Data Replay for Open Studio latest</a>  
+<a href=http://va3c.github.io/projects/open-s-data-display/latest/ target=_top >Data Replay for Open Studio latest</a>  
 <a href=https://github.com/va3c/projects/tree/gh-pages/open-studio-data-display  target=_top>Data Replay for Open Studio source code</a>
 
 ### Mission

@@ -1,8 +1,8 @@
 Open Studio Data Display Read Me
 ===
 
-[Open Studio Data Display latest]( http://va3c.github.io/projects/open-studio-data-display/latest/ )
-[Open Studio Data Display source code]( https://github.com/va3c/projects/tree/gh-pages/open-studio-data-display )
+[Open Studio Data Display latest]( http://va3c.github.io/projects/osm-data-replay/latest/ )
+[Open Studio Data Display source code]( https://github.com/va3c/projects/tree/gh-pages/osm-data-replay )
 
 R2 adds three new things
 
